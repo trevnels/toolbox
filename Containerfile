@@ -20,7 +20,7 @@ RUN npm install -g bun
 
 # install Typst
 RUN wget -qO- https://github.com/typst/typst/releases/latest/download/typst-x86_64-unknown-linux-musl.tar.xz | tar -xJ -C /tmp/ && \
-    /tmp/typst-x86_64-unknown-linux-musl/typst /usr/local/bin/ && \
+    mv /tmp/typst-x86_64-unknown-linux-musl/typst /usr/local/bin/ && \
     rm -rf /tmp/typst-x86_64-unknown-linux-musl
 
 RUN   ln -fs /usr/bin/distrobox-host-exec /usr/local/bin/docker && \
