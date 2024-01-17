@@ -12,15 +12,16 @@ RUN dnf -y update --skip-broken && \
     grep -v '^#' /extra-packages | xargs dnf -y install
 RUN rm /extra-packages
 
-RUN   ln -fs /bin/sh /usr/bin/sh && \
-      ln -fs /usr/bin/distrobox-host-exec /usr/local/bin/docker && \
-      ln -fs /usr/bin/distrobox-host-exec /usr/local/bin/podman && \
-      ln -fs /usr/bin/distrobox-host-exec /usr/local/bin/rpm-ostree && \
-      ln -fs /usr/bin/distrobox-host-exec /usr/local/bin/transactional-update
-
 # install Bun (npm should be present as part of extra-packages above)
 RUN npm install -g bun
 
 # install VSCode
 
 # install Typst
+
+
+RUN   ln -fs /bin/sh /usr/bin/sh && \
+      ln -fs /usr/bin/distrobox-host-exec /usr/local/bin/docker && \
+      ln -fs /usr/bin/distrobox-host-exec /usr/local/bin/podman && \
+      ln -fs /usr/bin/distrobox-host-exec /usr/local/bin/rpm-ostree && \
+      ln -fs /usr/bin/distrobox-host-exec /usr/local/bin/transactional-update
