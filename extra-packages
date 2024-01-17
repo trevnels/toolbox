@@ -1,9 +1,7 @@
-cosign
 dbus-x11
 eza
 ffmpeg
 fzf
-github-cli
 helix
 just
 make
@@ -12,7 +10,5 @@ npm
 python3
 ripgrep
 rustup
-starship
 wl-clipboard
 yt-dlp
-zellij
