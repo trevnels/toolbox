@@ -8,7 +8,7 @@ RUN dnf -y install https://download1.rpmfusion.org/free/fedora/rpmfusion-free-re
 RUN dnf -y install https://download1.rpmfusion.org/nonfree/fedora/rpmfusion-nonfree-release-$(rpm -E %fedora).noarch.rpm
 
 COPY extra-packages /
-RUN dnf -y update && \
+RUN dnf -y update --skip-broken && \
     grep -v '^#' /extra-packages | xargs dnf -y install
 RUN rm /extra-packages
 
