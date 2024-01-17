@@ -4,20 +4,24 @@ LABEL com.github.containers.toolbox="true" \
       usage="This image is meant to be used with the toolbox or distrobox command" \
       summary="My personal distrobox development environment"
 
-RUN dnf -y install https://download1.rpmfusion.org/free/fedora/rpmfusion-free-release-$(rpm -E %fedora).noarch.rpm
-RUN dnf -y install https://download1.rpmfusion.org/nonfree/fedora/rpmfusion-nonfree-release-$(rpm -E %fedora).noarch.rpm
+RUN rpm --import https://packages.microsoft.com/keys/microsoft.asc
+RUN sh -c 'echo -e "[code]\nname=Visual Studio Code\nbaseurl=https://packages.microsoft.com/yumrepos/vscode\nenabled=1\ngpgcheck=1\ngpgkey=https://packages.microsoft.com/keys/microsoft.asc" > /etc/yum.repos.d/vscode.repo'
 
 COPY extra-packages /
 RUN dnf -y update --skip-broken && \
     grep -v '^#' /extra-packages | xargs dnf -y install
 RUN rm /extra-packages
 
+# keep npm up to date
+RUN npm install -g npm
+
 # install Bun (npm should be present as part of extra-packages above)
 RUN npm install -g bun
 
-# install VSCode
-
 # install Typst
+RUN wget -qO- https://github.com/typst/typst/releases/download/latest/typst-x86_64-unknown-linux-musl.tar.xz | tar -xJ -C /tmp/ && \
+    /tmp/typst-x86_64-unknown-linux-musl/typst /usr/local/bin/ && \
+    rm -rf /tmp/typst-x86_64-unknown-linux-musl
 
 
 RUN   ln -fs /usr/bin/distrobox-host-exec /usr/local/bin/docker && \
