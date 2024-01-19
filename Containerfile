@@ -12,11 +12,8 @@ RUN dnf -y update --skip-broken && \
     grep -v '^#' /extra-packages | xargs dnf -y install
 RUN rm /extra-packages
 
-# keep npm up to date
-RUN npm install -g npm
-
-# install Bun (npm should be present as part of extra-packages above)
-RUN npm install -g bun
+# install Bun, and keep npm up to date (npm should be present as part of extra-packages above)
+RUN npm install -g bun npm typescript typescript-language-server
 
 # install Typst
 RUN wget -qO- https://github.com/typst/typst/releases/latest/download/typst-x86_64-unknown-linux-musl.tar.xz | tar -xJ -C /tmp/ && \

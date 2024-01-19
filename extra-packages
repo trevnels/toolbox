@@ -4,6 +4,8 @@ eza
 ffmpeg
 fzf
 gh
+golang
+golang-x-tools-gopls
 helix
 just
 make
