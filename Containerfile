@@ -8,7 +8,11 @@ LABEL com.github.containers.toolbox="true" \
 COPY extra-packages /
 COPY aur-packages /
 
-RUN paru -Syu --noconfirm
+RUN paru -Syu --noconfirm && \
+    useradd -m --shell=/bin/bash build && usermod -L build && \
+    echo "build ALL=(ALL) NOPASSWD: ALL" >> /etc/sudoers && \
+    echo "root ALL=(ALL) NOPASSWD: ALL" >> /etc/sudoers
+    
 RUN paru -S --noconfirm --needed $(cat /extra-packages)
 
 USER build
