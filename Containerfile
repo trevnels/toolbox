@@ -1,15 +1,12 @@
-FROM ghcr.io/ublue-os/fedora-distrobox:latest
+FROM ghcr.io/ublue-os/arch-distrobox:latest
 
 LABEL com.github.containers.toolbox="true" \
     usage="This image is meant to be used with the toolbox or distrobox command" \
     summary="My personal distrobox development environment"
 
-RUN rpm --import https://packages.microsoft.com/keys/microsoft.asc
-RUN sh -c 'echo -e "[code]\nname=Visual Studio Code\nbaseurl=https://packages.microsoft.com/yumrepos/vscode\nenabled=1\ngpgcheck=1\ngpgkey=https://packages.microsoft.com/keys/microsoft.asc" > /etc/yum.repos.d/vscode.repo'
-
 COPY extra-packages /
-RUN dnf -y update --skip-broken && \
-    grep -v '^#' /extra-packages | xargs dnf -y install
+RUN paru -Syu --noconfirm && \
+    paru -S --needed - < /extra-packages
 RUN rm /extra-packages
 
 # change distrobox cache dir to keep distrobox and host fontconfig caches separate
@@ -17,12 +14,7 @@ RUN rm /extra-packages
 RUN echo 'export XDG_CACHE_HOME="$HOME/.cache-distrobox"' > /etc/profile.d/cache-home.sh
 
 # install Bun, and keep npm up to date (npm should be present as part of extra-packages above)
-RUN npm install -g bun npm typescript typescript-language-server
-
-# install Typst
-RUN wget -qO- https://github.com/typst/typst/releases/latest/download/typst-x86_64-unknown-linux-musl.tar.xz | tar -xJ -C /tmp/ && \
-    mv /tmp/typst-x86_64-unknown-linux-musl/typst /usr/local/bin/ && \
-    rm -rf /tmp/typst-x86_64-unknown-linux-musl
+RUN npm install -g typescript typescript-language-server
 
 RUN   ln -fs /usr/bin/distrobox-host-exec /usr/local/bin/docker && \
     ln -fs /usr/bin/distrobox-host-exec /usr/local/bin/podman && \
