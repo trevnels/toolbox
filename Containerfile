@@ -18,7 +18,8 @@ RUN sed -i 's|NoExtract  = usr/share/man/\* usr/share/info/\*||' /etc/pacman.con
 
 # restore manpages
 RUN mkdir -p /usr/share/man
-RUN sh -c 'pacman -Qqo /usr/share/man | pacman -Syu --noconfirm -'
+RUN pacman -Qqo /usr/share/man > to-reinstall
+RUN pacman -Syu --noconfirm < to-reinstall
 
 # install normal packages
 RUN pacman -S --noconfirm --needed $(cat /extra-packages)
