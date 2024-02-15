@@ -8,16 +8,17 @@ LABEL com.github.containers.toolbox="true" \
 COPY extra-packages /
 COPY aur-packages /
 
-RUN paru -Syu --noconfirm && \
-    useradd -m --shell=/bin/bash build && usermod -L build && \
+RUN useradd -m --shell=/bin/bash build && usermod -L build && \
     echo "build ALL=(ALL) NOPASSWD: ALL" >> /etc/sudoers && \
     echo "root ALL=(ALL) NOPASSWD: ALL" >> /etc/sudoers
-    
-RUN paru -S --noconfirm --needed $(cat /extra-packages)
+
+# update and install normal packages
+RUN pacman -Syu --noconfirm --needed $(cat /extra-packages)
 
 USER build
 WORKDIR /home/build
-RUN paru -S --noconfirm --needed $(cat /aur-packages)
+# update and install aur packages
+RUN paru -Syu --noconfirm --needed $(cat /aur-packages)
 
 USER root
 WORKDIR /
@@ -31,7 +32,7 @@ RUN echo 'export XDG_CACHE_HOME="$HOME/.cache-distrobox"' > /etc/profile.d/cache
 # install ts & its lsp
 RUN npm install -g typescript typescript-language-server
 
-RUN   ln -fs /usr/bin/distrobox-host-exec /usr/local/bin/docker && \
+RUN ln -fs /usr/bin/distrobox-host-exec /usr/local/bin/docker && \
     ln -fs /usr/bin/distrobox-host-exec /usr/local/bin/podman && \
     ln -fs /usr/bin/distrobox-host-exec /usr/local/bin/rpm-ostree && \
     ln -fs /usr/bin/distrobox-host-exec /usr/local/bin/transactional-update && \
