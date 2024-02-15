@@ -11,12 +11,17 @@ COPY aur-packages /
 RUN mkdir -p /etc/fish/conf.d
 COPY distrobox.fish /etc/fish/conf.d/
 
-RUN useradd -m --shell=/bin/bash build && usermod -L build && \
+RUN sed -i 's|NoExtract  = usr/share/man/\* usr/share/info/\*||' && \
+    useradd -m --shell=/bin/bash build && usermod -L build && \
     echo "build ALL=(ALL) NOPASSWD: ALL" >> /etc/sudoers && \
     echo "root ALL=(ALL) NOPASSWD: ALL" >> /etc/sudoers
 
-# update and install normal packages
-RUN pacman -Syu --noconfirm --needed $(cat /extra-packages)
+# restore manpages
+RUN mkdir -p /usr/share/man && \
+    pacman -Qqo /usr/share/man | pacman -Syu --noconfirm -
+
+# install normal packages
+RUN pacman -S --noconfirm --needed $(cat /extra-packages)
 
 USER build
 WORKDIR /home/build
