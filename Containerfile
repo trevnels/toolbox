@@ -16,24 +16,25 @@ RUN sed -i 's|NoExtract  = usr/share/man/\* usr/share/info/\*||' /etc/pacman.con
     echo "build ALL=(ALL) NOPASSWD: ALL" >> /etc/sudoers && \
     echo "root ALL=(ALL) NOPASSWD: ALL" >> /etc/sudoers
 
-# restore manpages
 RUN mkdir -p /usr/share/man
 RUN pacman -Qqo /usr/share/man > to-reinstall
-RUN pacman -Syu --noconfirm $(cat /to-reinstall)
-RUN rm /to-reinstall
-
-# install normal packages
-RUN pacman -S --noconfirm --needed $(cat /extra-packages)
 
 USER build
 WORKDIR /home/build
-# update and install aur packages
-RUN paru -Syu --noconfirm --needed $(cat /aur-packages)
+
+# reinstall/upgrade everything with manpages based on the config change we make above
+RUN paru -Syu --noconfirm $(cat /to-reinstall)
+
+# install normal packages
+RUN paru -S --noconfirm --needed $(cat /extra-packages)
+
+# install aur packages
+RUN paru -S --noconfirm --needed $(cat /aur-packages)
 
 USER root
 WORKDIR /
 
-RUN rm /extra-packages /aur-packages
+RUN rm /extra-packages /aur-packages /to-reinstall
 
 # change distrobox cache dir to keep distrobox and host fontconfig caches separate
 # prevents fonts from breaking between host and container due to changing paths
