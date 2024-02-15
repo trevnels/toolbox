@@ -41,8 +41,7 @@ RUN rm /to-reinstall /extra-packages
 
 # change distrobox cache dir to keep distrobox and host fontconfig caches separate
 # prevents fonts from breaking between host and container due to changing paths
-# RUN echo 'export XDG_CACHE_HOME="$HOME/.cache-distrobox"' > /etc/profile.d/cache-home.sh
-# ^ this now happens as part of fish config
+RUN echo 'export XDG_CACHE_HOME="$HOME/.cache-distrobox"' > /etc/profile.d/cache-home.sh
 
 # install ts & its lsp
 RUN npm install -g typescript typescript-language-server
