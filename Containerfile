@@ -8,6 +8,9 @@ LABEL com.github.containers.toolbox="true" \
 COPY extra-packages /
 COPY aur-packages /
 
+RUN mkdir -p /etc/fish/conf.d
+COPY distrobox.fish /etc/fish/conf.d/
+
 RUN useradd -m --shell=/bin/bash build && usermod -L build && \
     echo "build ALL=(ALL) NOPASSWD: ALL" >> /etc/sudoers && \
     echo "root ALL=(ALL) NOPASSWD: ALL" >> /etc/sudoers
@@ -27,7 +30,7 @@ RUN rm /extra-packages /aur-packages
 
 # change distrobox cache dir to keep distrobox and host fontconfig caches separate
 # prevents fonts from breaking between host and container due to changing paths
-RUN echo 'export XDG_CACHE_HOME="$HOME/.cache-distrobox"' > /etc/profile.d/cache-home.sh
+# RUN echo 'export XDG_CACHE_HOME="$HOME/.cache-distrobox"' > /etc/profile.d/cache-home.sh
 
 # install ts & its lsp
 RUN npm install -g typescript typescript-language-server
