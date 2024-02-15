@@ -11,7 +11,7 @@ COPY aur-packages /
 RUN mkdir -p /etc/fish/conf.d
 COPY distrobox.fish /etc/fish/conf.d/
 
-RUN sed -i 's|NoExtract  = usr/share/man/\* usr/share/info/\*||' && \
+RUN sed -i 's|NoExtract  = usr/share/man/\* usr/share/info/\*||' /etc/pacman.conf && \
     useradd -m --shell=/bin/bash build && usermod -L build && \
     echo "build ALL=(ALL) NOPASSWD: ALL" >> /etc/sudoers && \
     echo "root ALL=(ALL) NOPASSWD: ALL" >> /etc/sudoers
