@@ -17,8 +17,8 @@ RUN sed -i 's|NoExtract  = usr/share/man/\* usr/share/info/\*||' /etc/pacman.con
     echo "root ALL=(ALL) NOPASSWD: ALL" >> /etc/sudoers
 
 # restore manpages
-RUN mkdir -p /usr/share/man && \
-    sh -c 'pacman -Qqo /usr/share/man | pacman -Syu --noconfirm -'
+RUN mkdir -p /usr/share/man
+RUN sh -c 'pacman -Qqo /usr/share/man | pacman -Syu --noconfirm -'
 
 # install normal packages
 RUN pacman -S --noconfirm --needed $(cat /extra-packages)
